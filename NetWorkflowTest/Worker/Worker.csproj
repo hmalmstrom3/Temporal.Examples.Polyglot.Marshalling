@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetWorkflow\NetWorkflow.csproj" />
+  <ProjectReference Include="..\NetEncryptionCodec\NetEncryptionCodec.csproj" />
   </ItemGroup>
 
   <ItemGroup>

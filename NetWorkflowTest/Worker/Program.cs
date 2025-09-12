@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Temporalio.Client;
 using Temporalio.Worker;
 using NetWorkflow;
-using Temporalio.Workflows;
+using Temporalio.Converters;
 
 // Configure logging
 using var loggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder =>
@@ -23,6 +23,7 @@ var client = await TemporalClient.ConnectAsync(
     new TemporalClientConnectOptions("localhost:7233")
     {
         Namespace = "default",
+        DataConverter = DataConverter.Default with { PayloadCodec = new NetEncryptionCodec.AesPayloadCodec() },
         LoggerFactory = LoggerFactory.Create(builder =>
             builder.AddSimpleConsole(options => options.TimestampFormat = "[HH:mm:ss] ").
            SetMinimumLevel(LogLevel.Information)),

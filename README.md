@@ -18,5 +18,9 @@ Some things to note:
 
 ## TODO: Data Converters experiments
 
+Example Payload Converter from language to langauge models.
+
+
 ## TODO: Integrate Codec Server to encrypt fields
 
+Example Payload Codecs (Handles byte-to-byte transformations, like compression or encryption)

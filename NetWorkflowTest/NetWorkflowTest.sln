@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worker", "Worker\Worker.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{198FE223-73FF-426D-AE1B-A6E7893A637F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetEncryptionCodec", "NetEncryptionCodec\NetEncryptionCodec.csproj", "{1B79E2E2-EF8B-4814-B9CF-7B5056A03152}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetEncryptionCodec.Tests", "NetEncryptionCodec.Tests\NetEncryptionCodec.Tests.csproj", "{1ED93E99-72DA-4671-9126-95B978B1259A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{198FE223-73FF-426D-AE1B-A6E7893A637F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{198FE223-73FF-426D-AE1B-A6E7893A637F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{198FE223-73FF-426D-AE1B-A6E7893A637F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B79E2E2-EF8B-4814-B9CF-7B5056A03152}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B79E2E2-EF8B-4814-B9CF-7B5056A03152}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B79E2E2-EF8B-4814-B9CF-7B5056A03152}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B79E2E2-EF8B-4814-B9CF-7B5056A03152}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ED93E99-72DA-4671-9126-95B978B1259A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ED93E99-72DA-4671-9126-95B978B1259A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ED93E99-72DA-4671-9126-95B978B1259A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ED93E99-72DA-4671-9126-95B978B1259A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
