@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
+using Temporalio.Api.Common.V1;
+using Temporalio.Converters;
+using Google.Protobuf;
 using NetEncryptionCodec;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddSimpleConsole().SetMinimumLevel(LogLevel.Information);
+builder.Services.AddSingleton<IPayloadCodec>(ctx => new AesPayloadCodec());
+builder.Services.AddCors();
 var app = builder.Build();
 
 // Key from env or default (dev only)
@@ -21,7 +23,13 @@ else
 
 var codec = new AesPayloadCodec(key: key);
 
-app.MapPost("/encode", async (HttpContext http) =>
+app.UseCors(builder =>
+    builder.WithHeaders("content-type", "x-namespace").
+    WithMethods("POST").
+    WithOrigins("http://localhost:8080", "http://localhost:8233"));
+
+app.MapPost("/encode", EncodeAsync);
+/*async (HttpContext http) =>
 {
     using var ms = new MemoryStream();
     await http.Request.Body.CopyToAsync(ms);
@@ -29,9 +37,10 @@ app.MapPost("/encode", async (HttpContext http) =>
     var outBytes = codec.Encrypt(input);
     http.Response.ContentType = "application/octet-stream";
     await http.Response.Body.WriteAsync(outBytes);
-});
+});*/
 
-app.MapPost("/decode", async (HttpContext http) =>
+app.MapPost("/decode", DecodeAsync);
+/*async (HttpContext http) =>
 {
     using var ms = new MemoryStream();
     await http.Request.Body.CopyToAsync(ms);
@@ -39,6 +48,33 @@ app.MapPost("/decode", async (HttpContext http) =>
     var outBytes = codec.Decrypt(input);
     http.Response.ContentType = "application/octet-stream";
     await http.Response.Body.WriteAsync(outBytes);
-});
+} */
 
 app.Run();
+
+static Task<IResult> EncodeAsync(
+        HttpContext ctx, IPayloadCodec codec) => ApplyCodecFuncAsync(ctx, codec.EncodeAsync);
+
+static Task<IResult> DecodeAsync(
+        HttpContext ctx, IPayloadCodec codec) => ApplyCodecFuncAsync(ctx, codec.DecodeAsync);
+
+static async Task<IResult> ApplyCodecFuncAsync(
+        HttpContext ctx, Func<IReadOnlyCollection<Payload>, Task<IReadOnlyCollection<Payload>>> func)
+    {
+        // Read payloads as JSON
+        if (ctx.Request.ContentType?.StartsWith("application/json") != true)
+        {
+            return Results.StatusCode(StatusCodes.Status415UnsupportedMediaType);
+        }
+        Payloads inPayloads;
+        using (var reader = new StreamReader(ctx.Request.Body))
+        {
+            inPayloads = JsonParser.Default.Parse<Payloads>(await reader.ReadToEndAsync());
+        }
+
+        // Apply codec func
+        var outPayloads = new Payloads() { Payloads_ = { await func(inPayloads.Payloads_) } };
+
+        // Return JSON
+        return Results.Text(JsonFormatter.Default.Format(outPayloads), "application/json");
+    }
